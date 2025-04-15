@@ -237,6 +237,28 @@
                         "examples": 1
                     }
                 }
+            },
+
+            "Profile Response": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "examples": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "examples": "John Doe"
+                    },
+                    "email": {
+                        "type": "string",
+                        "examples": "user@example.com"
+                    },
+                    "password": {
+                        "type": "string",
+                        "examples": "password123"
+                    }
+                }
             }
         }
     } 
