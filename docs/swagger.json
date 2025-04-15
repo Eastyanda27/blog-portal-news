@@ -1,0 +1,243 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "description": "This is an API for Blog Portal News",
+        "title": "Blog Portal News API",
+        "contact": {
+            "name": "Admin",
+            "email": "admin@gmail.com"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0"
+    },
+    
+    "servers": [
+        {
+            "url": "http://localhost:8080/api"
+            
+        }
+    ],
+
+    "paths": {
+
+    },
+    
+    "components": {
+        "scheme": {
+            "ErrorResponse": {
+                "type": "object",
+                "properties": {
+                    "meta": {
+                        "type": "object",
+                        "properties": {
+                            "status": {
+                                "type": "boolean",
+                                "examples": false
+                            },
+                            "message": {
+                                "type": "string",
+                                "examples": "An error occured"
+                            }
+                        }
+                    }
+                }
+            },
+
+            "DefaultResponse": {
+                "type": "object",
+                "properties": {
+                    "meta": {
+                        "type": "object",
+                        "properties": {
+                            "status": {
+                                "type": "boolean",
+                                "examples": true
+                            },
+                            "message": {
+                                "type": "string",
+                                "examples": "Success"
+                            }
+                        }
+                    }
+                }
+            }, 
+
+            "LoginRequest": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "examples": "user@example.com"
+                    },
+                    "password": {
+                        "type": "string",
+                        "examples": "password123"
+                    }
+                }
+            },
+
+            "CategoryRequest": {
+                "type": "object",
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "examples": "titleexample"
+                    }
+                }
+            },
+
+            "ContentRequest": {
+                "type": "object",
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "examples": "titleexample"
+                    },
+                    "excerpt": {
+                        "type": "string",
+                        "examples": "excerpt"
+                    },
+                    "description": {
+                        "type": "string",
+                        "examples": "description"
+                    },
+                    "tags": {
+                        "type": "string",
+                        "examples": "tags,data"
+                    },
+                    "category_id": {
+                        "type": "integer",
+                        "examples": 1
+                    },
+                    "status": {
+                        "type": "string",
+                        "examples": "DRAFT"
+                    }
+                } 
+            },
+
+            "UpdatePasswordRequest": {
+                "type": "object",
+                "properties": {
+                    "current_password": {
+                        "type": "string",
+                        "examples": "passssss"
+                    },
+                    "new_password": {
+                        "type": "string",
+                        "examples": "password123"
+                    },
+                    "confirm_password": {
+                        "type": "string",
+                        "examples": "password123"
+                    }
+                }
+            },
+
+            "AuthResponse": {
+                "type": "object",
+                "properties": {
+                    "meta": {
+                        "type": "object",
+                        "properties": {
+                            "status": {
+                                "type": "boolean",
+                                "examples": true
+                            },
+                            "message": {
+                                "type": "string",
+                                "examples": "Success"
+                            }
+                        }
+                    },
+                    "access_token": {
+                        "type": "string",
+                        "examples": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE3NDQ3ODI2NzEsIm5iZiI6MTc0NDY5NjI3MSwianRpIjoiMSJ9.MSsdpE9ebbBt7bJA8xinV1PspMC1iPbBIIHxA2DShHY"
+                    }, 
+                    "expired_at": {
+                        "type": "integer",
+                        "examples": 12121234
+                    }
+                }
+            },
+
+            "CategoryResponse": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "examples": 1
+                    },
+                    "title": {
+                        "type": "string",
+                        "examples": "Category 1"
+                    },
+                    "slug": {
+                        "type": "string",
+                        "examples": "category-1"
+                    },
+                    "created_by_name": {
+                        "type": "string",
+                        "examples": "John Doe"
+                    }
+                }
+            },
+
+            "ContentResponse": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "examples": 1
+                    },
+                    "title": {
+                        "type": "string",
+                        "examples": "Category 1"
+                    },
+                    "excerpt": {
+                        "type": "string",
+                        "examples": "category-1"
+                    },
+                    "description": {
+                        "type": "string",
+                        "examples": "category-1"
+                    },
+                    "status": {
+                        "type": "string",
+                        "examples": "PUBLISHED"
+                    },
+                    "tags": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "example": "data"
+                        }
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "examples": "date-time"
+                    },
+                    "category_name": {
+                        "type": "string",
+                        "examples": "satu"
+                    },
+                    "author": {
+                        "type": "string",
+                        "examples": "John Doe"
+                    },
+                    "category_id": {
+                        "type": "integer",
+                        "examples": 1
+                    },
+                    "created_by_id": {
+                        "type": "integer",
+                        "examples": 1
+                    }
+                }
+            }
+        }
+    } 
+}
