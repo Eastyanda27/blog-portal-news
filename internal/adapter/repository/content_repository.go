@@ -4,6 +4,7 @@ import (
 	"blognewsportal/internal/core/domain/entity"
 	"blognewsportal/internal/core/domain/model"
 	"context"
+	"fmt"
 	"strings"
 
 	"github.com/gofiber/fiber/v2/log"
@@ -12,7 +13,7 @@ import (
 )
 
 type ContentRepository interface {
-	GetContents(ctx context.Context) ([]entity.ContentEntity, error)
+	GetContents(ctx context.Context, query entity.QueryString) ([]entity.ContentEntity, error)
 	GetContentByID(ctx context.Context, id int64) (*entity.ContentEntity, error)
 	CreateContent(ctx context.Context, req entity.ContentEntity) error
 	EditContentByID(ctx context.Context, req entity.ContentEntity) error
@@ -113,10 +114,36 @@ func (c *contentRepository) GetContentByID(ctx context.Context, id int64) (*enti
 	return &resp, nil
 }
 
-func (c *contentRepository) GetContents(ctx context.Context) ([]entity.ContentEntity, error) {
+func (c *contentRepository) GetContents(ctx context.Context, query entity.QueryString) ([]entity.ContentEntity, error) {
 	var modelContents []model.Content
 
-	err = c.db.Order("created_at DESC").Preload(clause.Associations).Find(&modelContents).Error
+	if query.Page <= 0 {
+		query.Page = 1
+	}
+	if query.Limit <= 0 {
+		query.Limit = 10
+	}
+	if query.OrderBy == "" {
+		query.OrderBy = "created_at"
+	}
+	if query.OrderType == "" {
+		query.OrderType = "DESC"
+	}
+
+	order := fmt.Sprintf("%s %s", query.OrderBy, query.OrderType)
+	offset := (query.Page - 1) * query.Limit
+	status := ""
+	if query.Status != "" {
+		status = query.Status
+	}
+
+	err = c.db.Preload(clause.Associations).
+		Where("title ilike ? OR excerpt ilike ? OR description ilike ?", "%"+query.Search+"%", "%"+query.Search+"%", "%"+query.Search+"%").
+		Where("status like ?", "%"+status+"%").
+		Order(order).
+		Limit(query.Limit).
+		Offset(offset).
+		Find(&modelContents).Error
 	if err != nil {
 		code = "[REPOSITORY] GetContents - 1"
 		log.Errorw(code, err)

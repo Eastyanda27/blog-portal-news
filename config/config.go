@@ -50,10 +50,5 @@ func NewConfig() *Config {
 			DBMaxOpen: viper.GetInt("DATABASE_MAX_OPEN_CONNECTION"),
 			DBMaxIdle: viper.GetInt("DATABASE_MAX_IDLE_CONNECTION"),
 		},
-		S3: SupabaseS3{
-			URL:    viper.GetString("SUPABASE_URL"),
-			Key:    viper.GetString("SUPABASE_KEY"),
-			Bucket: viper.GetString("SUPABASE_BUCKET"),
-		},
 	}
 }
