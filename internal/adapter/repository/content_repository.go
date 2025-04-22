@@ -5,6 +5,7 @@ import (
 	"blognewsportal/internal/core/domain/model"
 	"context"
 	"fmt"
+	"math"
 	"strings"
 
 	"github.com/gofiber/fiber/v2/log"
@@ -13,7 +14,7 @@ import (
 )
 
 type ContentRepository interface {
-	GetContents(ctx context.Context, query entity.QueryString) ([]entity.ContentEntity, error)
+	GetContents(ctx context.Context, query entity.QueryString) ([]entity.ContentEntity, int64, int64, error)
 	GetContentByID(ctx context.Context, id int64) (*entity.ContentEntity, error)
 	CreateContent(ctx context.Context, req entity.ContentEntity) error
 	EditContentByID(ctx context.Context, req entity.ContentEntity) error
@@ -114,8 +115,9 @@ func (c *contentRepository) GetContentByID(ctx context.Context, id int64) (*enti
 	return &resp, nil
 }
 
-func (c *contentRepository) GetContents(ctx context.Context, query entity.QueryString) ([]entity.ContentEntity, error) {
+func (c *contentRepository) GetContents(ctx context.Context, query entity.QueryString) ([]entity.ContentEntity, int64, int64, error) {
 	var modelContents []model.Content
+	var countData int64
 
 	if query.Page <= 0 {
 		query.Page = 1
@@ -137,17 +139,32 @@ func (c *contentRepository) GetContents(ctx context.Context, query entity.QueryS
 		status = query.Status
 	}
 
-	err = c.db.Preload(clause.Associations).
+	sqlMain := c.db.Preload(clause.Associations).
 		Where("title ilike ? OR excerpt ilike ? OR description ilike ?", "%"+query.Search+"%", "%"+query.Search+"%", "%"+query.Search+"%").
-		Where("status like ?", "%"+status+"%").
+		Where("status like ?", "%"+status+"%")
+
+	if query.CategoryID > 0 {
+		sqlMain = sqlMain.Where("category_id = ?", query.CategoryID)
+	}
+
+	err = sqlMain.Model(&modelContents).Count(&countData).Error
+	if err != nil {
+		code = "[REPOSITORY] GetContents - 1"
+		log.Errorw(code, err)
+		return nil, 0, 0, err
+	}
+
+	totalPages := int(math.Ceil(float64(countData) / float64(query.Limit)))
+
+	err = sqlMain.
 		Order(order).
 		Limit(query.Limit).
 		Offset(offset).
 		Find(&modelContents).Error
 	if err != nil {
-		code = "[REPOSITORY] GetContents - 1"
+		code = "[REPOSITORY] GetContents - 2"
 		log.Errorw(code, err)
-		return nil, err
+		return nil, 0, 0, err
 	}
 
 	resps := []entity.ContentEntity{}
@@ -177,7 +194,7 @@ func (c *contentRepository) GetContents(ctx context.Context, query entity.QueryS
 		resps = append(resps, resp)
 	}
 
-	return resps, nil
+	return resps, countData, int64(totalPages), nil
 }
 
 func NewContentRepository(db *gorm.DB) ContentRepository {

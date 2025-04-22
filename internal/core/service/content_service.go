@@ -9,7 +9,7 @@ import (
 )
 
 type ContentService interface {
-	GetContents(ctx context.Context, query entity.QueryString) ([]entity.ContentEntity, error)
+	GetContents(ctx context.Context, query entity.QueryString) ([]entity.ContentEntity, int64, int64, error)
 	GetContentByID(ctx context.Context, id int64) (*entity.ContentEntity, error)
 	CreateContent(ctx context.Context, req entity.ContentEntity) error
 	EditContentByID(ctx context.Context, req entity.ContentEntity) error
@@ -64,15 +64,15 @@ func (c *contentService) GetContentByID(ctx context.Context, id int64) (*entity.
 	return result, nil
 }
 
-func (c *contentService) GetContents(ctx context.Context, query entity.QueryString) ([]entity.ContentEntity, error) {
-	result, err := c.contentRepository.GetContents(ctx, query)
+func (c *contentService) GetContents(ctx context.Context, query entity.QueryString) ([]entity.ContentEntity, int64, int64, error) {
+	result, totalData, totalPages, err := c.contentRepository.GetContents(ctx, query)
 	if err != nil {
 		code = "[SERVICE] GetContents - 1"
 		log.Errorw(code, err)
-		return nil, err
+		return nil, 0, 0, err
 	}
 
-	return result, nil
+	return result, totalData, totalPages, nil
 }
 
 func NewContentService(contentRepo repository.ContentRepository) ContentService {

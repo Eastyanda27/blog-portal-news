@@ -123,7 +123,7 @@ func (ch *contentHandler) GetContentWithQuery(c *fiber.Ctx) error {
 		Status:    "Publish",
 	}
 
-	results, err := ch.contentService.GetContents(c.Context(), reqEntity)
+	results, totalData, totalPages, err := ch.contentService.GetContents(c.Context(), reqEntity)
 	if err != nil {
 		code = "[HANDLER] GetContentWithQuery - 3"
 		log.Errorw(code, err)
@@ -154,6 +154,12 @@ func (ch *contentHandler) GetContentWithQuery(c *fiber.Ctx) error {
 
 	defaultSuccessResponse.Meta.Status = true
 	defaultSuccessResponse.Meta.Message = "Contents fetched successfully"
+	defaultSuccessResponse.Pagination = &response.PaginationResponse{
+		TotalRecords: int(totalData),
+		Page:         page,
+		PerPage:      limit,
+		TotalPages:   int(totalPages),
+	}
 	defaultSuccessResponse.Data = contentResponses
 
 	return c.JSON(defaultSuccessResponse)
@@ -403,7 +409,7 @@ func (ch *contentHandler) GetContents(c *fiber.Ctx) error {
 		CategoryID: 0,
 	}
 
-	results, err := ch.contentService.GetContents(c.Context(), reqEntity)
+	results, totalData, totalPage, err := ch.contentService.GetContents(c.Context(), reqEntity)
 	if err != nil {
 		code = "[HANDLER] GetContents - 2"
 		log.Errorw(code, err)
@@ -434,6 +440,12 @@ func (ch *contentHandler) GetContents(c *fiber.Ctx) error {
 
 	defaultSuccessResponse.Meta.Status = true
 	defaultSuccessResponse.Meta.Message = "Contents fetched successfully"
+	defaultSuccessResponse.Pagination = &response.PaginationResponse{
+		TotalRecords: int(totalData),
+		Page:         0,
+		PerPage:      0,
+		TotalPages:   int(totalPage),
+	}
 	defaultSuccessResponse.Data = contentResponses
 
 	return c.JSON(defaultSuccessResponse)
