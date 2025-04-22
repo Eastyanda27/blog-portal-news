@@ -621,6 +621,14 @@
                             "type": "string",
                             "default": ""
                         }
+                    },
+                    {
+                        "in": "query",
+                        "name": "categoryID",
+                        "schema": {
+                            "type": "integer",
+                            "default": 0
+                        }
                     }
                 ],
                 "responses": {
