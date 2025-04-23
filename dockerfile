@@ -10,7 +10,7 @@ COPY . .
 
 RUN go build -o main .
 
-FROM gcr.io/distroless/base-debian10
+FROM gcr.io/distroless/cc-debian12
 
 COPY --from=builder /app/main /app/main
 
