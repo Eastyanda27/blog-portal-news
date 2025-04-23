@@ -22,14 +22,14 @@ FROM ubuntu:22.04 AS glibc-installer
 RUN apt-get update && apt-get install -y build-essential wget
 
 # Download and build GLIBC 2.34
-RUN wget https://ftp.gnu.org/gnu/libc/glibc-2.34.tar.gz && \
+RUN wget https://mirror.csclub.uwaterloo.ca/gnu/libc/glibc-2.34.tar.gz && \
     tar -xvzf glibc-2.34.tar.gz && \
     cd glibc-2.34 && \
     mkdir build && cd build && \
     ../configure --prefix=/usr && \
     make -j$(nproc) && \
     make install
-
+    
 # Step 3: Prepare a minimal distroless image and copy the application
 FROM gcr.io/distroless/base-debian10
 
