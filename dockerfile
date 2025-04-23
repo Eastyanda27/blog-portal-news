@@ -22,7 +22,7 @@ FROM ubuntu:22.04 AS glibc-installer
 RUN apt-get update && apt-get install -y build-essential wget
 
 # Download and build GLIBC 2.34
-RUN wget http://ftp.gnu.org/gnu/libc/glibc-2.34.tar.gz && \
+RUN wget https://ftp.gnu.org/gnu/libc/glibc-2.34.tar.gz && \
     tar -xvzf glibc-2.34.tar.gz && \
     cd glibc-2.34 && \
     mkdir build && cd build && \
