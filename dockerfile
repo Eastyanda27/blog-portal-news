@@ -20,6 +20,6 @@ COPY .env /app/env
 
 WORKDIR /app
 
-EXPOSE 8080
+EXPOSE 8000
 
 CMD ["/app/main"]
