@@ -16,6 +16,8 @@ COPY --from=builder /app/main /app/main
 
 COPY ./docs /app/docs
 
+COPY .env /app/env
+
 WORKDIR /app
 
 EXPOSE 8080
