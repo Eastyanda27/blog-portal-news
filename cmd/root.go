@@ -32,15 +32,13 @@ func init() {
 func initConfig() {
 	if cfgFile != "" {
 		viper.SetConfigFile(cfgFile)
-	} else {
-		viper.SetConfigFile(".env")
+
+		if err := viper.ReadInConfig(); err != nil {
+			fmt.Fprintf(os.Stderr, "Error reading config file: %s\n", err)
+		} else {
+			fmt.Fprintln(os.Stdout, "Using config file:", viper.ConfigFileUsed())
+		}
 	}
 
 	viper.AutomaticEnv()
-
-	if err := viper.ReadInConfig(); err != nil {
-		fmt.Fprintf(os.Stderr, "Error reading config file: %s\n", err)
-	} else {
-		fmt.Fprintln(os.Stdout, "Using config file:", viper.ConfigFileUsed())
-	}
 }
