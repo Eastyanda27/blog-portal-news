@@ -9,6 +9,7 @@ import (
 	"blognewsportal/lib/middleware"
 	"blognewsportal/lib/pagination"
 	"context"
+	"fmt"
 	"log"
 	"os"
 	"os/signal"
@@ -24,6 +25,7 @@ import (
 
 func RunServer() {
 	cfg := config.NewConfig()
+	fmt.Printf("CONFIG LOADED: %+v\n", cfg.Psql)
 	db, err := cfg.ConnectionPostgres()
 	if err != nil {
 		log.Fatalf("Error to connect to database: %v", err)
